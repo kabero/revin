@@ -24,31 +24,37 @@ class App():
         self.backup()
         old_tasks = self._csv2hash()
 
-        self._open_file_with_editor(self.last_tmp_file)
-        new_tasks = self._csv2hash()
-        adding_keys, deleting_keys, updating_keys = self._diff(old_tasks, new_tasks)
+        while True:
+            self._open_file_with_editor(self.last_tmp_file)
+            new_tasks = self._csv2hash()
+            adding_keys, deleting_keys, updating_keys = self._diff(old_tasks, new_tasks)
 
-        if not updating_keys and not adding_keys and not deleting_keys:
-            print("Nothing to do.\n")
-            return
+            if not updating_keys and not adding_keys and not deleting_keys:
+                print("Nothing to do.\n")
+                return
 
-        msg = "Confirm:\n"
-        if adding_keys:
-            msg += "  " + '\n  '.join([f"Add \"{new_tasks[key]}\"" for key in adding_keys]) + '\n'
-        if updating_keys:
-            msg += "  " + '\n  '.join([f"Update \"{old_tasks[key]}\" -> \"{new_tasks[key]}\"" for key in updating_keys]) + '\n'
-        if deleting_keys:
-            msg += "  " + '\n  '.join([f"Delete \"{old_tasks[key]}\"" for key in deleting_keys]) + '\n'
-        msg += 'Answer(y/n): '
+            msg = "Confirm:\n"
+            msg += ''.join([f"  Add \"{new_tasks[key]}\"\n" for key in adding_keys])
+            msg += ''.join([f"  Update \"{old_tasks[key]}\" -> \"{new_tasks[key]}\"\n" for key in updating_keys])
+            msg += ''.join([f"  Delete \"{old_tasks[key]}\"\n" for key in deleting_keys])
+            msg += 'Answer(y/n/r): '
 
-        if self._confirm(msg):
-            # If we don't run delete last, IDs might become inconsistent
-            if updating_keys:
-                self._update_tasks(updating_keys, new_tasks)
-            if adding_keys:
-                self._add_tasks(adding_keys, new_tasks)
-            if deleting_keys:
-                self._delete_tasks(deleting_keys)
+            confirmed, needs_reedit = self._confirm(msg)
+            print("\n")
+            if confirmed:
+                # If we don't run delete last, IDs might become inconsistent
+                if updating_keys:
+                    self._update_tasks(updating_keys, new_tasks)
+                if adding_keys:
+                    self._add_tasks(adding_keys, new_tasks)
+                if deleting_keys:
+                    self._delete_tasks(deleting_keys)
+                break
+            elif needs_reedit:
+                continue
+            else:
+                print("Aborted\n")
+                break
 
         self._delete_tmp_file()
 
@@ -66,21 +72,26 @@ class App():
         file_name = f"{today.strftime('%Y-%m-%d-%H%M%S')}.csv"
         shutil.copyfile(self.last_tmp_file, os.path.join(BACKUP_DIR, file_name))
 
-    def _confirm(self, message):
+    def _confirm(self, message="Are you sure?(y/n/r)"):
         while True:
             user_input = input(message).lower().strip()
-            confirmed = False
             match user_input:
                 case "y" | "ye" | "yes":
                     confirmed = True
+                    needs_reedit = False
                     break
                 case "n" | "no":
                     confirmed = False
+                    needs_reedit = False
+                    break
+                case "r" | "re" | "reedit":
+                    confirmed = False
+                    needs_reedit = True
                     break
                 case _:
                     continue
             print("\n")
-        return confirmed
+        return confirmed, needs_reedit
 
     def _csv2hash(self):
         tasks = defaultdict()
