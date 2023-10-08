@@ -61,7 +61,7 @@ class App():
 
             msg = "Confirm:\n"
             msg += ''.join([f"  {GREEN}Add{END} \"{new_tasks[key]['content']}\"\n" for key in adding_keys[::-1]])
-            msg += ''.join([f"  {BLUE}Update{END} \"{old_tasks[key]['content']}\" {BLUE}->{END} \"{new_tasks[key]['content']}\"\n" for key in updating_keys[::-1]])
+            msg += ''.join([f"  {BLUE}Update{END} \"{old_tasks[key]['content']}\" {BLUE}\n      ->{END} \"{new_tasks[key]['content']}\"\n" for key in updating_keys[::-1]])
             msg += ''.join([f"  {RED}Delete{END} \"{old_tasks[key]['content']}\"\n" for key in deleting_keys[::-1]])
             msg += ''.join([f"  {MAGENTA}Complete{END} \"{new_tasks[key]['content']}\"\n" for key in completed_keys[::-1]])
             msg += 'Answer(y/n/r): '
