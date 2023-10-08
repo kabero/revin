@@ -136,11 +136,11 @@ class App():
                 dummy_id += 1
                 id, content = str(dummy_id), tmp[0].strip()
             else:
-                if re.match(r"\d+", tmp[0]):
+                if re.fullmatch(r"\d+", tmp[0]):
                     id, content = tmp[0], tmp[1].strip()
                     if int(id) > self.max_id:
                         raise InvalidFileError("Do not include the ID when adding a task.")
-                elif re.match(r"X\d", tmp[0]):
+                elif re.fullmatch(r"X\d+", tmp[0]):
                     id, content = tmp[0][1:], tmp[1].strip()
                     is_completed = True
                     if int(id) > self.max_id:
