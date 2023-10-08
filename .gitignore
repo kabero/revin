@@ -1,2 +1,4 @@
 /backup/
 /tmp/
+/__pycache__/
+/*.egg-info/

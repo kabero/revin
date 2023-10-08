@@ -203,6 +203,11 @@ class Reminder():
         subprocess.run(command)
 
 
+def revin():
+    app = App()
+    app.edit_reminder()
+
+
 def main():
     app = App()
     app.edit_reminder()
