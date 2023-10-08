@@ -9,8 +9,9 @@ from collections import defaultdict
 
 REMINDER_CMD = '/opt/homebrew/bin/reminders'
 EDITOR_CMD = '/opt/homebrew/bin/nvim'
-TMP_DIR = 'tmp/'
-BACKUP_DIR = 'backup/'
+APP_HOME_DIR = os.path.expanduser("~/revin")
+TMP_DIR = os.path.join(APP_HOME_DIR, 'tmp/')
+BACKUP_DIR = os.path.join(APP_HOME_DIR, 'backup/')
 
 BLACK = "\033[30m"
 RED = "\033[31m"
@@ -28,6 +29,9 @@ class App():
         self.reminder = Reminder()
         self.reminder.change_list('Inbox')
         self.last_tmp_file = None
+        os.makedirs(APP_HOME_DIR, exist_ok=True)
+        os.makedirs(TMP_DIR, exist_ok=True)
+        os.makedirs(BACKUP_DIR, exist_ok=True)
 
     def edit_reminder(self):
         self._create_tmp_file_for_editing_reminder()
