@@ -31,7 +31,7 @@ class App():
 
     def edit_reminder(self):
         self._create_tmp_file_for_editing_reminder()
-        self.backup()
+        self.create_backup()
         old_tasks = self._csv2hash()
 
         while True:
@@ -77,7 +77,7 @@ class App():
         # TODO: Not implemented
         pass
 
-    def backup(self):
+    def create_backup(self):
         os.makedirs(BACKUP_DIR, exist_ok=True)
         today = datetime.datetime.today()
         file_name = f"{today.strftime('%Y-%m-%d-%H%M%S')}.csv"
