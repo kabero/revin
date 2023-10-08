@@ -12,6 +12,16 @@ EDITOR_CMD = '/opt/homebrew/bin/nvim'
 TMP_DIR = 'tmp/'
 BACKUP_DIR = 'backup/'
 
+BLACK = "\033[30m"
+RED = "\033[31m"
+GREEN = "\033[32m"
+YELLOW = "\033[33m"
+BLUE = "\033[34m"
+MAGENTA = "\033[35m"
+CYAN = "\033[36m"
+WHITE = "\033[37m"
+END = "\033[0m"
+
 
 class App():
     def __init__(self):
@@ -27,16 +37,17 @@ class App():
         while True:
             self._open_file_with_editor(self.last_tmp_file)
             new_tasks = self._csv2hash()
-            adding_keys, deleting_keys, updating_keys = self._diff(old_tasks, new_tasks)
+            adding_keys, deleting_keys, updating_keys = self._diff(
+                old_tasks, new_tasks)
 
             if not updating_keys and not adding_keys and not deleting_keys:
                 print("Nothing to do.\n")
                 return
 
             msg = "Confirm:\n"
-            msg += ''.join([f"  Add \"{new_tasks[key]}\"\n" for key in adding_keys])
-            msg += ''.join([f"  Update \"{old_tasks[key]}\" -> \"{new_tasks[key]}\"\n" for key in updating_keys])
-            msg += ''.join([f"  Delete \"{old_tasks[key]}\"\n" for key in deleting_keys])
+            msg += ''.join([f"  {GREEN}Add{END} \"{new_tasks[key]}\"\n" for key in adding_keys])  # noqa
+            msg += ''.join([f"  {BLUE}Update{END} \"{old_tasks[key]}\" {BLUE}->{END} \"{new_tasks[key]}\"\n" for key in updating_keys])  # noqa
+            msg += ''.join([f"  {RED}Delete{END} \"{old_tasks[key]}\"\n" for key in deleting_keys])  # noqa
             msg += 'Answer(y/n/r): '
 
             confirmed, needs_reedit = self._confirm(msg)
@@ -70,7 +81,8 @@ class App():
         os.makedirs(BACKUP_DIR, exist_ok=True)
         today = datetime.datetime.today()
         file_name = f"{today.strftime('%Y-%m-%d-%H%M%S')}.csv"
-        shutil.copyfile(self.last_tmp_file, os.path.join(BACKUP_DIR, file_name))
+        shutil.copyfile(
+            self.last_tmp_file, os.path.join(BACKUP_DIR, file_name))
 
     def _confirm(self, message="Are you sure?(y/n/r)"):
         while True:
