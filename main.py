@@ -8,7 +8,7 @@ from collections import defaultdict
 
 
 REMINDER_CMD = '/opt/homebrew/bin/reminders'
-EDITOR_CMD = '/opt/homebrew/bin/nvim'
+EDITOR_CMD = os.environ.get('EDITOR')
 APP_HOME_DIR = os.path.expanduser("~/revin")
 TMP_DIR = os.path.join(APP_HOME_DIR, 'tmp/')
 BACKUP_DIR = os.path.join(APP_HOME_DIR, 'backup/')
