@@ -7,7 +7,7 @@ setup(
     install_requires=[],
     entry_points={
         "console_scripts": [
-            "revin = main:revin"
+            "revin = revin:revin"
         ]
     }
 )
